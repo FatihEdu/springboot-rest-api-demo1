@@ -32,8 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-### Specstory ###
+### My Stuff ###
 .specstory/
-
-### Logs ###
 logs/
+data/
