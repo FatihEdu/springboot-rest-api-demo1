@@ -73,6 +73,10 @@ public class ApiControllers {
     @PutMapping("reviews/{id}")
     public ResponseEntity<String> updateReview(@PathVariable Long id,
                                             @RequestBody Review updateData) {
+
+        if (updateData == null) {
+            return ResponseEntity.badRequest().body("Invalid request");
+        }              
         
         int rating = updateData.getRating();
         String content = updateData.getContent();
@@ -120,6 +124,11 @@ public class ApiControllers {
 
     @PostMapping("/reviews")
     public ResponseEntity<Review> createReview(@RequestBody Review review) {
+
+        if (review == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         // Validate rating
         if (review.getRating() == 0) {
             return ResponseEntity.badRequest().build();
