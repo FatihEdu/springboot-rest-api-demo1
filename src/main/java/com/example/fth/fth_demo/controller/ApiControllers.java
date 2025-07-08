@@ -123,23 +123,23 @@ public class ApiControllers {
     }
 
     @PostMapping("/reviews")
-    public ResponseEntity<Review> createReview(@RequestBody Review review) {
+    public ResponseEntity<?> createReview(@RequestBody Review review) {
 
         if (review == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Invalid request");
         }
 
         // Validate rating
         if (review.getRating() == 0) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Rating is required");
         }   
         else if (review.getRating() < 1 || review.getRating() > 5) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
         }
         
         // Validate content length
         if (review.getContent() != null && review.getContent().length() > 500) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Content must be less than 500 characters");
         }
 
         Review savedReview = reviewRepo.save(review);
