@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -13,6 +15,7 @@ import jakarta.validation.constraints.Min;
 public class Review {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(nullable = true, length = 500)
@@ -24,6 +27,7 @@ public class Review {
 
     @Column(nullable = true, updatable = true)
     @UpdateTimestamp
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime modifiedAt;
 
     public LocalDateTime getModifiedAt() {
@@ -32,6 +36,7 @@ public class Review {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
 
     public LocalDateTime getCreatedAt() {
