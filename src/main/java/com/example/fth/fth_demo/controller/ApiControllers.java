@@ -82,7 +82,8 @@ public class ApiControllers {
         String content = updateData.getContent();
 
         if (rating == 0 && (content == null || content.isEmpty())) {
-            return ResponseEntity.status(418).build();
+            //return ResponseEntity.status(418).build();
+            return ResponseEntity.badRequest().body("At least one field must be provided for update");
         }
         else if (rating != 0 && (rating < 1 || rating > 5)) {
             return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
