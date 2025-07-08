@@ -78,7 +78,7 @@ public class ApiControllers {
         String content = updateData.getContent();
 
         if (rating == 0 && (content == null || content.isEmpty())) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(418).build();
         }
         else if (rating != 0 && (rating < 1 || rating > 5)) {
             return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
@@ -94,6 +94,14 @@ public class ApiControllers {
         }
 
         Review review = optionalReview.get();
+
+        // See if anything actually changed.
+        boolean ratingChanged = rating != 0 && review.getRating() != rating;
+        boolean contentChanged = content != null && !content.isEmpty() && !content.equals(review.getContent());
+
+        if (!ratingChanged && !contentChanged) {
+            return ResponseEntity.badRequest().body("Nothing changed"); // No changes made
+        }
         
 
         if (rating != 0) {
@@ -102,6 +110,8 @@ public class ApiControllers {
         if (content != null && !content.isEmpty()) {
             review.setContent(content);
         }
+
+        
 
         reviewRepo.save(review);
             
