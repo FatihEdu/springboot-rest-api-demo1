@@ -34,3 +34,6 @@ build/
 
 ### Specstory ###
 .specstory/
+
+### Logs ###
+.logs/
