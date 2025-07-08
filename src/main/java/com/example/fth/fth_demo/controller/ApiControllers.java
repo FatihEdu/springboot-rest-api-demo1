@@ -37,8 +37,8 @@ public class ApiControllers {
 
     // Reviews
     @GetMapping("/reviews")
-    public List<Review> getReviews(@RequestParam(required = false) Boolean requireContent,
-                                   @RequestParam(required = false) Integer minRating) {
+    public List<Review> getReviews(@RequestParam(defaultValue = "false") boolean requireContent,
+                                   @RequestParam(defaultValue = "0") int minRating) {
 
         List<Review> reviews = reviewRepo.findAll();
 
