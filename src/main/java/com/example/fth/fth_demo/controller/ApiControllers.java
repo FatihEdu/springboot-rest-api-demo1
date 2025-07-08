@@ -37,8 +37,8 @@ public class ApiControllers {
 
     // Reviews
     @GetMapping("/reviews")
-    public List<Review> getReviews(@RequestParam(required = false) boolean requireContent,
-                                   @RequestParam(required = false) int minRating) {
+    public List<Review> getReviews(@RequestParam(required = false) Boolean requireContent,
+                                   @RequestParam(required = false) Integer minRating) {
 
         List<Review> reviews = reviewRepo.findAll();
 
@@ -80,7 +80,7 @@ public class ApiControllers {
         if (rating == 0 && (content == null || content.isEmpty())) {
             return ResponseEntity.badRequest().build();
         }
-        else if (rating < 1 || rating > 5) {
+        else if (rating != 0 && (rating < 1 || rating > 5)) {
             return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
         }
         else if (content != null && content.length() > 500) {
@@ -111,7 +111,10 @@ public class ApiControllers {
     @PostMapping("/reviews")
     public ResponseEntity<Review> createReview(@RequestBody Review review) {
         // Validate rating
-        if (review.getRating() < 1 || review.getRating() > 5) {
+        if (review.getRating() == 0) {
+            return ResponseEntity.badRequest().build();
+        }   
+        else if (review.getRating() < 1 || review.getRating() > 5) {
             return ResponseEntity.badRequest().build();
         }
         
