@@ -58,7 +58,8 @@ class ReviewServiceTest {
     void findById_found() {
         Review review = new Review();
         when(reviewRepo.findById(1L)).thenReturn(Optional.of(review));
-        when(mapper.toDto(any(Optional.class))).thenReturn(Optional.of(new ReviewDto()));
+        // Use ArgumentMatchers.<Optional<Review>>any() for type safety and avoid ambiguity
+        when(mapper.toDto(org.mockito.ArgumentMatchers.<Optional<Review>>any())).thenReturn(Optional.of(new ReviewDto()));
         Optional<ReviewDto> result = reviewService.findById(1L);
         assertTrue(result.isPresent());
     }
