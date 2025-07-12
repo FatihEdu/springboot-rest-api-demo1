@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 //import com.example.fth.fth_demo.config.AppProperties;
 
@@ -59,11 +61,35 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
             "Resource not found",
-            ex.getMessage(),
+            null, //"No static resource found.",
             HttpStatus.NOT_FOUND.value(),
             null
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    // Handle HttpRequestMethodNotSupportedException (405)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            "Method not allowed",
+            ex.getMessage(),
+            HttpStatus.METHOD_NOT_ALLOWED.value(),
+            null
+        );
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
+    }
+
+    // Handle HttpMessageNotReadableException (400)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(HttpMessageNotReadableException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            "Bad request",
+            ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     // Handle generic exceptions
