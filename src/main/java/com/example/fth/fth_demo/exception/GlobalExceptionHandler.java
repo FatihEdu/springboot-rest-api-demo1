@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 //import com.example.fth.fth_demo.config.AppProperties;
 
@@ -51,6 +52,18 @@ public class GlobalExceptionHandler {
         
         //return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         //        .body(ex.getMessage());
+    }
+
+    // Handle NoResourceFoundException (for unmapped static resources)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            "Resource not found",
+            ex.getMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     // Handle generic exceptions

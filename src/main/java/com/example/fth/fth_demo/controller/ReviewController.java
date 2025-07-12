@@ -37,7 +37,7 @@ public class ReviewController {
     private final IReviewService reviewService;
 
     // Reviews
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public ResponseEntity<List<ReviewDto>> getReviews(@RequestParam(required = false) Boolean requireContent,
                                                       @RequestParam(required = false) Integer minRating) {
 
@@ -49,7 +49,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviews); // 200 OK
     }
 
-    @GetMapping("/{id}")
+    @GetMapping({"/{id}", "{id}/"})
     public ResponseEntity<ReviewDto> getReviewById(@PathVariable Long id) {
         Optional<ReviewDto> reviewDto = reviewService.findById(id);
 
@@ -69,7 +69,7 @@ public class ReviewController {
         return response;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping({"/{id}", "{id}/"})
     @Validated(ValidationGroups.Update.class)
     public ResponseEntity<ReviewDto> updateReview(@PathVariable Long id,
                                 @Valid @RequestBody ReviewDto updateData) {
@@ -126,7 +126,7 @@ public class ReviewController {
         return ResponseEntity.noContent().build();*/
     }
 
-    @PostMapping("/")
+    @PostMapping({"/",""})
     @Validated(ValidationGroups.Create.class)
     public ResponseEntity<ReviewDto> createReview(@RequestBody @Valid ReviewDto review) {
 
@@ -156,7 +156,7 @@ public class ReviewController {
         return ResponseEntity.status(201).body(savedReview); // HTTP 201 Created*/
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping({"/{id}", "{id}/"})
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
         reviewService.delete(id);
         return ResponseEntity.noContent().build();
