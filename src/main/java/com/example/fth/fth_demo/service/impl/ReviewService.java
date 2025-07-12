@@ -18,8 +18,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
 public class ReviewService implements IReviewService {
         private final ReviewRepo reviewRepo;
+        private final ReviewServiceMapper mapper;
 
         // Helper so private.
         private Review findEntityByIdOrThrowException(Long id) {
@@ -28,51 +30,45 @@ public class ReviewService implements IReviewService {
         }
 
         @Override
+
         public List<ReviewDto> findAll() {
             List<Review> reviews = reviewRepo.findAll();
-            return ReviewServiceMapper.INSTANCE.toDtoList(reviews);    
+            return mapper.toDtoList(reviews);
         }
 
         @Override
         public List<ReviewDto> findAllWithFilters(Boolean requireContent, Integer minRating) {
             List<Review> reviews = reviewRepo.findAll();
-        
             // Chain filters using streams
             if (Boolean.TRUE.equals(requireContent)) {
                 reviews = reviews.stream()
                     .filter(review -> review.getContent() != null && !review.getContent().isEmpty())
                     .collect(Collectors.toList());
             }
-            
             if (minRating != null) {
                 reviews = reviews.stream()
                     .filter(review -> review.getRating() >= minRating)
                     .collect(Collectors.toList());
             }
-
-            return ReviewServiceMapper.INSTANCE.toDtoList(reviews);    
+            return mapper.toDtoList(reviews);
         }
 
         @Override
         public Optional<ReviewDto> findById(Long id) {
             Optional<Review> review = reviewRepo.findById(id);
-            return ReviewServiceMapper.INSTANCE.toDto(review);
+            return mapper.toDto(review);
         }
 
         @Override
         public ReviewDto save(ReviewDto reviewDto) {
-            Review review = ReviewServiceMapper.INSTANCE.toEntity(reviewDto);
+            Review review = mapper.toEntity(reviewDto);
             Review savedReview = reviewRepo.save(review);
-            return ReviewServiceMapper.INSTANCE.toDto(savedReview);    
+            return mapper.toDto(savedReview);
         }
 
         @Override
         public ReviewDto update(Long id, ReviewDto reviewDto) {
-            /*Review existingReview = reviewRepo.findById(id)
-                .orElseThrow(() -> new ReviewNotFoundException(id));*/
-
             Review existingReview = findEntityByIdOrThrowException(id);
-            
             if ( 
                 ( (reviewDto.getContent() == null || reviewDto.getContent().isEmpty() ) 
                     && reviewDto.getRating() == null)
@@ -81,15 +77,12 @@ public class ReviewService implements IReviewService {
                 ) {
                 throw new ReviewNoChangesDetectedException(id);
             }
-
             existingReview.setContent(
                 Optional.ofNullable(reviewDto.getContent()).orElse(existingReview.getContent()));
-
             existingReview.setRating(
                 Optional.ofNullable(reviewDto.getRating()).orElse(existingReview.getRating()));
-
             Review updatedReview = reviewRepo.save(existingReview);
-            return ReviewServiceMapper.INSTANCE.toDto(updatedReview);
+            return mapper.toDto(updatedReview);
         }
 
         @Override

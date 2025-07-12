@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 import com.example.fth.fth_demo.dto.ReviewDto;
 import com.example.fth.fth_demo.entity.Review;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ReviewServiceMapper {
     ReviewServiceMapper INSTANCE = Mappers.getMapper(ReviewServiceMapper.class);
 
