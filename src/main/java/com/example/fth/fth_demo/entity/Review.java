@@ -1,33 +1,26 @@
-package com.example.fth.fth_demo.models;
+package com.example.fth.fth_demo.entity;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 
 @Entity @Table(name = "reviews")
 public class Review {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(nullable = true, length = 500)
     private String content;
 
     @Column(nullable = false)
-    @Min(1) @Max(5)
-    private int rating;
+    private Integer rating;
 
-    @Column(nullable = true, updatable = true)
+    @Column(nullable = true, updatable = true, insertable = false)
     @UpdateTimestamp
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime modifiedAt;
 
     public LocalDateTime getModifiedAt() {
@@ -36,7 +29,6 @@ public class Review {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
 
     public LocalDateTime getCreatedAt() {
@@ -60,11 +52,11 @@ public class Review {
         this.content = content;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
     
