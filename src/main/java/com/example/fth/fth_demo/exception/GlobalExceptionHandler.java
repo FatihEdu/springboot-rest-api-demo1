@@ -16,6 +16,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import com.example.fth.fth_demo.dto.ErrorResponse;
 
+import io.micrometer.core.instrument.config.validate.ValidationException;
+
 @ControllerAdvice
 //@RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -86,6 +88,18 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
             "Bad request",
             ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    // Handle ValidationException (400)
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            "Validation error",
+            environment.matchesProfiles("dev") ? ex.getMessage() : null,
             HttpStatus.BAD_REQUEST.value(),
             null
         );

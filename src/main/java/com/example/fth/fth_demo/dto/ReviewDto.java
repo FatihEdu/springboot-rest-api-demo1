@@ -28,7 +28,7 @@ public class ReviewDto {
     @NotNull(groups = ValidationGroups.Update.class)
     private Long id;
     
-    @Size(max = 500, message = "Content exceeds 500 characters")
+    @Size(max = 500, message = "Content exceeds 500 characters", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
     private String content;
     
     @NotNull(groups = ValidationGroups.Create.class)

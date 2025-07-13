@@ -15,7 +15,6 @@ import com.example.fth.fth_demo.exception.ReviewNotFoundException;
 import com.example.fth.fth_demo.service.IReviewService;
 import com.example.fth.fth_demo.validation.ValidationGroups;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,9 +59,9 @@ public class ReviewController {
     }
 
     @PutMapping({"/{id}", "{id}/"})
-    @Validated(ValidationGroups.Update.class)
     public ResponseEntity<ReviewDto> updateReview(@PathVariable Long id,
-                                @Valid @RequestBody ReviewDto updateData) {
+                                    @Validated(ValidationGroups.Update.class)
+                                    @RequestBody ReviewDto updateData) {
 
         ReviewDto review = reviewService.update(id, updateData);                                            
         return ResponseEntity.ok().body(review);
@@ -70,8 +69,9 @@ public class ReviewController {
     }
 
     @PostMapping({"/",""})
-    @Validated(ValidationGroups.Create.class)
-    public ResponseEntity<ReviewDto> createReview(@RequestBody @Valid ReviewDto review) {
+    public ResponseEntity<ReviewDto> createReview(
+                                @Validated(ValidationGroups.Create.class)
+                                @RequestBody ReviewDto review) {
 
         ReviewDto savedReview = reviewService.save(review);
         
