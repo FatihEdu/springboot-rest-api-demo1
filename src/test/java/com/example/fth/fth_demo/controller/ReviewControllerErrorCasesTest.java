@@ -3,6 +3,7 @@ package com.example.fth.fth_demo.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class ReviewControllerErrorCasesTest {
 
     @Autowired
@@ -27,9 +29,9 @@ class ReviewControllerErrorCasesTest {
     }
 
     @Test
-    @DisplayName("GET /api/reviews/ with invalid method returns 405")
+    @DisplayName("/api/reviews/ with invalid method returns 405")
     void postToGetEndpoint_returns405() throws Exception {
-        mockMvc.perform(post("/api/reviews/"))
+        mockMvc.perform(patch("/api/reviews/"))
                 .andExpect(status().isMethodNotAllowed());
     }
 
@@ -38,7 +40,7 @@ class ReviewControllerErrorCasesTest {
     void getNonApiReviews_returns404() throws Exception {
         mockMvc.perform(get("/reviews/123456"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Resource not found"));
+                .andExpect(jsonPath("$.error").value("Resource not found"));
     }
 
     @Test
